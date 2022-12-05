@@ -1,25 +1,35 @@
-import logo from './logo.svg';
 import './App.css';
+import {useContext, useRef} from "react";
+import Context from "./store/Context";
+import {actions} from "./state";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [stateTodo, dispatch] = useContext(Context);
+    const {todo, todos} = stateTodo;
+    const inputRef = useRef();
+
+    return (
+        <div className="App" style={{margin: "16px"}}>
+            <input type="text"
+                   value={todo}
+                   ref={inputRef}
+                   onChange={(e) => dispatch(actions.actionChange(e.target.value))}
+            />
+            <button onClick={() => {
+                dispatch(actions.actionAdd())
+                dispatch(actions.actionChange(''))
+                inputRef.current.focus()
+            }}>Submit
+            </button>
+            <ul>
+                {
+                    todos.map((item, key) => (
+                        <li key={key}>{item}</li>
+                    ))
+                }
+            </ul>
+        </div>
+    );
 }
 
 export default App;
